@@ -18,7 +18,6 @@ def on_EVENT_LBUTTONDOWN(event, x, y, flags, param):
 
 def select_points(image, points_num):
     global selected_pts
-    selected_pts = []
 
     cv2.namedWindow("image")
     cv2.setMouseCallback("image", on_EVENT_LBUTTONDOWN)
@@ -48,15 +47,11 @@ dstTri = src_pts.astype(np.float32)
 warp_mat = cv2.getAffineTransform(srcTri, dstTri)
 warp_dst = cv2.warpAffine(foreground_img, warp_mat, (background_img.shape[1], background_img.shape[0]))
 
-# cv2.imshow('Source image', background_img)
-# cv2.imshow('Warp', warp_dst)
 
 imgadd = cv2.add(background_img, warp_dst)
-# cv2.imshow('imgadd', imgadd)
 cv2.destroyAllWindows()
 
 while (1):
-    # cv2.imshow("image", background_img)
     cv2.imshow('resultado', imgadd)
     if cv2.waitKey(0) & 0xFF == 27:
         break
