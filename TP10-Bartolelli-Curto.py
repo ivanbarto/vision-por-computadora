@@ -3,9 +3,9 @@
 import cv2
 import numpy as np
 
-
 img = cv2.imread("res/fachada_habitacion.png")
 selected_pts = []
+
 
 def on_EVENT_LBUTTONDOWN(event, x, y, flags, param):
     global selected_pts, img
@@ -15,7 +15,7 @@ def on_EVENT_LBUTTONDOWN(event, x, y, flags, param):
         cv2.circle(img, (x, y), 1, (255, 0, 0), thickness=3)
 
 
-def select_points(image):
+def select_points(image, ancho_marco, alto_marco):
     # Los puntos se deben seleccionar de izquierda a derecha y de arriba hacia abajo
     global selected_pts
 
@@ -27,6 +27,16 @@ def select_points(image):
         k = cv2.waitKey(1)
 
         # Se evalua que se marquen 4 puntos
+        if k == 27 or len(selected_pts) == 2:
+            cv2.line(img, (selected_pts[0][0], selected_pts[0][1]), (selected_pts[1][0], selected_pts[1][1]),
+                     (0, 255, 0), thickness=1)
+            cv2.putText(img=img, org=(selected_pts[0][0], selected_pts[0][1]), fontFace=cv2.FONT_ITALIC,
+                        color=(0, 255, 0), thickness=1, fontScale=0.6, lineType=cv2.LINE_AA, text=str(ancho_marco)+"cm")
+        if k == 27 or len(selected_pts) == 3:
+            cv2.line(img, (selected_pts[0][0], selected_pts[0][1]), (selected_pts[2][0], selected_pts[2][1]),
+                     (0, 255, 0), thickness=1)
+            cv2.putText(img=img, org=(selected_pts[2][0], int((selected_pts[2][1] + selected_pts[0][1])/2)), fontFace=cv2.FONT_ITALIC,
+                        color=(0, 255, 0), thickness=1, fontScale=0.6, lineType=cv2.LINE_AA, text=str(alto_marco)+"cm")
         if k == 27 or len(selected_pts) == 4:
             break
 
@@ -34,7 +44,8 @@ def select_points(image):
 
     return np.array(selected_pts, dtype=np.float32)
 
-src_pts = select_points(img)
+
+src_pts = select_points(img, 76, 206)
 
 #
 # while True:
