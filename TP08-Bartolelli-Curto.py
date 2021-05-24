@@ -41,7 +41,7 @@ print(src_pts)
 cv2.namedWindow("image")
 cv2.setMouseCallback("image", on_EVENT_LBUTTONDOWN)
 
-srcTri = np.array([[0, 0], [background_img.shape[1] - 1, 0], [0, background_img.shape[0] - 1]]).astype(np.float32)
+srcTri = np.array([[0, 0], [foreground_img.shape[1] - 1, 0], [0, foreground_img.shape[0] - 1]]).astype(np.float32)
 dstTri = src_pts.astype(np.float32)
 
 warp_mat = cv2.getAffineTransform(srcTri, dstTri)
