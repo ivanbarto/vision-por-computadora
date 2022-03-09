@@ -3,9 +3,11 @@ import serial
 import time
 import mediapipe as mp
 
-
-serial_port = serial.Serial('COM6',9600,timeout=1)
+# inicializamos puerto serie
+serial_port = serial.Serial('COM6', 9600, timeout=1)
 time.sleep(2)
+
+# inicializamos el detector facial
 mp_face_detection = mp.solutions.face_detection
 
 LABELS = ["Autorizado", "NO AUTORIZADO"]
@@ -25,6 +27,8 @@ with mp_face_detection.FaceDetection(
 
         height, width, _ = frame.shape
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        # se procesa la imagen de la cara y se devuelva la posicion de la cara detectada
         results = face_detection.process(frame_rgb)
 
         if results.detections is not None:
@@ -38,20 +42,26 @@ with mp_face_detection.FaceDetection(
 
                 face_image = frame[ymin: ymin + h, xmin: xmin + w]
                 face_image = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
+
+                # se recorta la cara a partir de su posicion
                 face_image = cv2.resize(face_image, (72, 72), interpolation=cv2.INTER_CUBIC)
 
+                # se le pasa la cara para reconocer, en escala de grises porque el algoritmo trabaja así
                 result = face_mask.predict(face_image)
-                # cv2.putText(frame, "{}".format(result), (xmin, ymin - 5), 1, 1.3, (210, 124, 176), 1, cv2.LINE_AA)
+                # como resultado, obtenemos un valor de confianza (1) y la etiqueta asociada (0)
 
                 print(result[1])
                 if result[1] < 150:
                     color = (0, 255, 0) if LABELS[result[0]] == "Autorizado" else (0, 0, 255)
 
+                    # si está autorizada, mandamos una 'p' a través del puerto serie para prender el led verde
+                    # de lo contrario, mandamos una 'n' para prender el led rojo
                     if LABELS[result[0]] == "Autorizado":
                         serial_port.write(b'p')
                     else:
                         serial_port.write(b'n')
 
+                    #agregamos la etiqueta y dibujamos un rectángulo en la cara
                     cv2.putText(frame, "{}".format(LABELS[result[0]]), (xmin, ymin - 15), 2, 1, color, 1, cv2.LINE_AA)
                     cv2.rectangle(frame, (xmin, ymin), (xmin + w, ymin + h), color, 2)
 

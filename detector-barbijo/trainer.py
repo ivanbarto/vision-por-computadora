@@ -2,6 +2,10 @@ import cv2
 import os
 import numpy as np
 
+
+
+#cargamos las imagenes e iniciamos los datasets
+
 dataPath = "Dataset_faces"
 dir_list = os.listdir(dataPath)
 print("Lista archivos:", dir_list)
@@ -17,8 +21,6 @@ for name_dir in dir_list:
         image_path = dir_path + "/" + file_name
         print(image_path)
         image = cv2.imread(image_path, 0)
-        # cv2.imshow("Image", image)
-        # cv2.waitKey(10)
 
         facesData.append(image)
         labels.append(label)
