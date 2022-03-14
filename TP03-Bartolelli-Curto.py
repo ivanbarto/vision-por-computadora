@@ -15,7 +15,7 @@ cap = cv2.VideoCapture('res/motogp_crash.mp4')
 (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
 
 if int(major_ver) < 3:
-    fps = int(float(cap.get(cv2.CAP_PROP_FPS)))
+    fps = int(float(cap.get(cv2.cv.CAP_PROP_FPS)))
 else:
     fps = int(float(cap.get(cv2.CAP_PROP_FPS)))
 
