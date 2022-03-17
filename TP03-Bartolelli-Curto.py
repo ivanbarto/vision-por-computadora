@@ -19,8 +19,6 @@ if int(major_ver) < 3:
 else:
     fps = int(float(cap.get(cv2.CAP_PROP_FPS)))
 
-print(fps)
-
 while cap.isOpened():
     ret, frame = cap.read()
     if ret is True:

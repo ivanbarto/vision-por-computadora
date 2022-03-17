@@ -35,8 +35,10 @@ with mp_face_detection.FaceDetection(
             for detection in results.detections:
                 xmin = int(detection.location_data.relative_bounding_box.xmin * width)
                 ymin = int(detection.location_data.relative_bounding_box.ymin * height)
+
                 w = int(detection.location_data.relative_bounding_box.width * width)
                 h = int(detection.location_data.relative_bounding_box.height * height)
+
                 if xmin < 0 and ymin < 0:
                     continue
 

@@ -25,7 +25,7 @@ while True:
     img = imutils.resize(img, width=1000, height=1800)
 
 
-    # Obtener marcador Aruco
+    # detectar esquinas del marcador Aruco
     corners, _, _ = cv2.aruco.detectMarkers(img, aruco_dict, parameters=parameters)
     if corners:
 
@@ -36,7 +36,7 @@ while True:
         # Obtiene perímetro de Aruco
         aruco_perimeter = cv2.arcLength(corners[0], True)
 
-        # Relacion (ratio) de pixeles a cm
+        # Relacion (ratio) de pixeles por CM --> las open cv nos da el perimetro en pixeles
         pixel_cm_ratio = aruco_perimeter / 20
 
         contours = detector.detect_objects(img)
@@ -51,12 +51,15 @@ while True:
             object_width = w / pixel_cm_ratio
             object_height = h / pixel_cm_ratio
 
-            # Muestra el rectángulo en la imagen
+            # obtener las esquinas de la caja
             box = cv2.boxPoints(rect)
             box = np.int0(box)
 
+            #punto en el centro de la caja
             cv2.circle(img, (int(x), int(y)), 5, (0, 0, 255), -1)
+
             cv2.polylines(img, [box], True, (255, 0, 0), 2)
+
             cv2.putText(img, "Ancho {} cm".format(round(object_width, 1)), (int(x - 100), int(y - 20)), cv2.FONT_HERSHEY_PLAIN, 2, (100, 200, 0), 2)
             cv2.putText(img, "Altura {} cm".format(round(object_height, 1)), (int(x - 100), int(y + 15)), cv2.FONT_HERSHEY_PLAIN, 2, (100, 200, 0), 2)
 
